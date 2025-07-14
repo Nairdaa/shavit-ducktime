@@ -96,7 +96,7 @@ public Action Shavit_OnFinish_Post(int client, int style, float time, int jumps,
 	if (lostTime < 0.0001)
 		lostTime = 0.0;
 
-	PrintToChat(client, "%s[Timer] You lost ~%.3f seconds due to crouching.", g_sChatStrings.sChatPrefix, lostTime);
+	Shavit_PrintToChat(client, "You lost ~%.3f seconds ducking.", gS_ChatStrings.sVariable, lostTime, gS_ChatStrings.sText);
 	ResetDuckData(client);
 
 	return Plugin_Continue;
