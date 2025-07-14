@@ -6,11 +6,19 @@ float g_fDuckingLoss[MAXPLAYERS + 1];
 float g_fLastCheck[MAXPLAYERS + 1];
 bool g_bTimerRunning[MAXPLAYERS + 1];
 
+ChatStrings g_sChatStrings;
+
 public void OnPluginStart()
 {
 	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 }
+
+public void Shavit_OnChatConfigLoaded()
+{
+	Shavit_GetChatStringsStruct(g_sChatStrings);
+}
+
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
@@ -79,21 +87,18 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 
 public Action Shavit_OnFinish_Post(int client, int style, float time, int jumps, int strafes, float sync)
 {
-	if(!IsClientInGame(client))
-	{
+	if (!IsValidClient(client))
 		return Plugin_Continue;
-	}
 
 	g_bTimerRunning[client] = false;
 
 	float lostTime = g_fDuckingLoss[client];
-	if(lostTime < 0.0001)
-	{
+	if (lostTime < 0.0001)
 		lostTime = 0.0;
-	}
 
-	PrintToChat(client, "[Timer] You lost ~%.3f seconds due to crouching.", lostTime);
+	PrintToChat(client, "%s[Timer] You lost ~%.3f seconds due to crouching.", g_sChatStrings.sChatPrefix, lostTime);
 	ResetDuckData(client);
+
 	return Plugin_Continue;
 }
 
